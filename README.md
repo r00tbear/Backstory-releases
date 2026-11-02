@@ -41,8 +41,8 @@ This repository contains release downloads, documentation, and screenshots. The 
 ### Library
 
 - Use **Inbox** to review speaker names, text corrections, new summaries, and processing progress.
-- Organize meetings by client and project, including personal projects. Add a meeting note and track tasks from meetings.
-- Search what was said, what was on screen, and summaries and tasks; filter by client, speaker, and date.
+- Organize meetings by client and project, including personal projects. Add a meeting note to any meeting.
+- Search what was said, what was on screen, and summaries, decisions and action items; filter by client, speaker, and date.
 - Import existing `.mov`, `.mp4`, `.m4a`, `.wav`, or `.mp3` recordings with a single audio track.
 - Generate local summaries, decisions, topics, and action items when Ollama and its required model are installed. See [setup](#transcription-setup).
 
@@ -59,7 +59,7 @@ The bundled helper uses `stdio`. Its six tools are read-only:
 | `resolve_meeting` | Resolve a meeting ID or `lmr://` link to its local directory and file manifest. |
 | `get_outline` | Read the current summary, decisions, topics, action items, frames, note, participants, and bookmarks. |
 | `search_meeting` | Find text in one meeting's transcript and recognized screen text. |
-| `search_library` | Search across meeting titles, transcripts, screen text, summaries, decisions, and tasks. |
+| `search_library` | Search across meeting titles, transcripts, screen text, summaries, decisions, and action items. |
 | `get_context_at` | Read transcript segments and current context frames around a time, range, or segment. |
 | `get_frame_at` | Extract an exact video frame as JPEG, with an optional crop. |
 
@@ -219,7 +219,7 @@ Use the path shown by your copy of Backstory if it is installed elsewhere. If yo
 
 Try asking your agent:
 
-> Find the meeting where we discussed the calendar connector. List the decisions and tasks, include timestamps, and show the screen frame around the relevant discussion.
+> Find the meeting where we discussed the calendar connector. List the decisions and action items, include timestamps, and show the screen frame around the relevant discussion.
 
 ## Updates
 
