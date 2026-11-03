@@ -29,7 +29,7 @@ This repository contains release downloads, documentation, and screenshots. The 
 
 - Transcribe locally with Qwen3-ASR and separate call voices with FluidAudio speaker detection.
 - Read timestamped speech beside the video or below it; jump from text to the recording.
-- Listen to speaker samples and confirm names in **Who's who**. Names suggested from the screen need your confirmation before they appear in exports or MCP responses.
+- Listen to speaker samples and confirm names in **Who's who**. When a Meet or Zoom speaker tile consistently shows the same readable name across the meeting, Backstory can confirm it **by video**; choose **Not this person** to undo it. Confirmed names appear in exports and MCP responses; ordinary suggestions do not.
 - Edit text yourself, or explicitly send it to an installed Codex CLI with **Improve text** and review the proposed corrections. Optional Canary transcription provides a second recognizer's opinion.
 
 ### Screen and moments
@@ -40,7 +40,7 @@ This repository contains release downloads, documentation, and screenshots. The 
 
 ### Library
 
-- Use **Inbox** to review speaker names, text corrections, new summaries, and processing progress.
+- Use **Inbox** to review speaker names, text corrections, new summaries, and processing progress. You can also identify speakers from video in earlier meetings there.
 - Organize meetings by client and project, including personal projects. Add a meeting note to any meeting.
 - Search what was said, what was on screen, and summaries, decisions and action items; filter by client, speaker, and date.
 - Import existing `.mov`, `.mp4`, `.m4a`, `.wav`, or `.mp3` recordings with a single audio track.
@@ -69,11 +69,11 @@ Transcript tools include correction status and confirmed speaker names. Agents c
 
 All names, conversations, and screens below are synthetic demo data. Images switch between light and dark appearance with your preferred color scheme. Update versions and connection states are illustrative.
 
-**Video, speakers, and transcript in one view**
+**Meeting summary, speakers, and playback**
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/screenshots/meeting-dark.png">
-  <img src="assets/screenshots/meeting-light.png" alt="Synthetic call video beside timestamped speech, named speakers, and an inline screen frame" width="1250">
+  <img src="assets/screenshots/meeting-light.png" alt="Synthetic meeting with speaker names, a local summary, decisions, action items, and playback controls" width="1250">
 </picture>
 
 **Every screen frame, with the text recognized on it**
@@ -95,7 +95,7 @@ All names, conversations, and screens below are synthetic demo data. Images swit
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/screenshots/moments-dark.png">
-  <img src="assets/screenshots/moments-light.png" alt="Transcript with a captured screen frame and a marked moment" width="1250" loading="lazy">
+  <img src="assets/screenshots/moments-light.png" alt="Timestamped transcript with an inline screen frame, a marked moment, and a speaker identified by video" width="1250" loading="lazy">
 </picture>
 
 </details>
@@ -111,21 +111,31 @@ All names, conversations, and screens below are synthetic demo data. Images swit
 </details>
 
 <details>
-<summary>Inbox and meeting processing</summary>
+<summary>Inbox speaker and correction review</summary>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/screenshots/inbox-dark.png">
-  <img src="assets/screenshots/inbox-light.png" alt="Inbox with speaker confirmation, text corrections, new summaries, and processing steps" width="1250" loading="lazy">
+  <img src="assets/screenshots/inbox-light.png" alt="Inbox with a prompt to identify speakers in an earlier meeting, speaker review cards, and text corrections" width="1250" loading="lazy">
 </picture>
 
 </details>
 
 <details>
-<summary>Settings → Agent Access</summary>
+<summary>Settings → Transcription during installation</summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/screenshots/transcription-setup-dark.png">
+  <img src="assets/screenshots/transcription-setup-light.png" alt="Transcription installation with overall progress, download size and speed, installation steps, Cancel, and Show log" width="900" loading="lazy">
+</picture>
+
+</details>
+
+<details>
+<summary>Settings → Agent access</summary>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/screenshots/agent-access-dark.png">
-  <img src="assets/screenshots/agent-access-light.png" alt="Agent Access showing helper readiness, current Claude Code and Codex connections, library path, and read-only tools" width="760" loading="lazy">
+  <img src="assets/screenshots/agent-access-light.png" alt="Agent access showing helper readiness and Connect and Copy command controls for Claude Code and Codex" width="900" loading="lazy">
 </picture>
 
 </details>
@@ -145,6 +155,7 @@ All names, conversations, and screens below are synthetic demo data. Images swit
 1. [Download the latest release](https://github.com/r00tbear/Backstory-releases/releases/latest) and open the DMG.
 2. Drag **Backstory.app** to **Applications**.
 3. Open Backstory.
+4. Open **Settings → Transcription** and choose **Install transcription**.
 
 **Backstory is not notarized.** macOS will block the first launch. After trying to open it, go to **System Settings → Privacy & Security**, scroll to the security message, and choose **Open Anyway**. Confirm **Open** when prompted. This creates a one-time exception for that copy of the app; subsequent launches open normally. See [Apple's instructions](https://support.apple.com/en-us/102445).
 
@@ -159,63 +170,33 @@ If you enable screen recording permission after Backstory is already running, qu
 
 ## Transcription setup
 
-Recording works without transcription. To get meeting text, install **both** the speech and speaker-detection runtimes. **Settings → Transcription** shows their status, executable paths, and copyable install commands. The app does not run these installers for you.
+Recording works without transcription. To get meeting text, open **Settings → Transcription** and choose **Install transcription**. Backstory installs both **Speech recognition** and **Speaker separation** from the app. Allow about **6.7 GB** of downloads and keep about **13 GB** free. You do not need Terminal, Homebrew, Python, Git, or CMake. The installer shows overall progress, steps, bytes and speed, plus **Cancel**, **Try Again**, and **Show log**. One test Mac completed all three components in **9 min 38 sec**; your time depends on the connection and Mac.
 
-With Backstory in `/Applications`, run this in Terminal:
+The installer downloads a pinned Python runtime, packages, and models, checks them locally, and keeps runtimes, models, caches, and logs under `~/Library/Application Support/Backstory/`. During recording, installation continues at background priority. Once the required components are ready, meetings that failed only because transcription was missing are queued for processing automatically.
 
-```sh
-bash '/Applications/Backstory.app/Contents/Resources/Installers/install-transcription-runtime.sh'
-```
-
-The installer needs Python 3.11 or newer, Git, and Swift build tools. It installs Qwen3-ASR, its forced aligner, and FluidAudio speaker detection, downloads the models, and checks them on synthesized speech. Internet access is needed for setup. The Qwen model downloads alone are about **6.5 GB**; Python dependencies, speaker models, caches, and build files need additional space. Download and compilation time depend on your connection and Mac; there is no fixed installation time.
-
-Runtime executables are installed under:
-
-```text
-~/Library/Application Support/Local Meeting Recorder/MLXRuntime/
-~/Library/Application Support/Local Meeting Recorder/DiarizerRuntime/
-```
-
-The earlier folder name is retained for compatibility. Qwen models use the model download cache; FluidAudio models are downloaded to `~/Library/Application Support/FluidAudio/`.
-
-Without either required runtime, recordings remain available but transcription cannot start. After installation, use **Check Again** in Settings → Transcription, then **Retry Transcription** in the meeting (or **Transcribe** if it has not been attempted).
-
-**Optional second opinion:** Canary is used to cross-check speech for text correction. Its installer builds CrispASR and downloads Canary and alignment models; it also requires CMake:
-
-```sh
-bash '/Applications/Backstory.app/Contents/Resources/Installers/install-canary-runtime.sh'
-```
-
-It installs under `~/Library/Application Support/Local Meeting Recorder/CanaryRuntime/`. Without it, correction uses Qwen alone.
+**Optional second opinion:** Choose **Install** beside **Second opinion** in the same settings pane. It downloads about **1.7 GB** of Canary models and needs about **3.5 GB** free. Without it, text correction uses Qwen alone.
 
 **Optional local summaries:** Install and run Ollama locally with the `gemma4:12b-it-q4_K_M` model. The transcription installer does not install Ollama or that model. Backstory uses the local Ollama service for summaries, decisions, topics, and action items; these features need that additional setup.
 
 ## Connect your agents
 
-Open **Settings → Agent Access**. It shows helper readiness, the configured Claude Code and Codex paths, whether they match the current helper, the meeting library path, server name, transport, and available tools. It provides setup or path-repair text to copy. It reads saved configuration and compares helper contents without launching it; it does not edit your agent configuration or test a live agent session.
+Open **Settings → Agent access**. For an installed Claude Code or Codex CLI, choose **Connect** or **Update**. Backstory runs that agent's CLI only when you click the button. **Copy command** is available if you prefer manual setup. The pane checks saved configuration against the current helper without launching it; start a new agent session afterward.
 
 For an app installed in `/Applications`, the manual setup is:
 
 **Claude Code** — run in Terminal, then start a new agent session:
 
 ```sh
-claude mcp add --transport stdio --scope user local-meeting-recorder -- '/Applications/Backstory.app/Contents/MacOS/LocalMeetingRecorderMCP'
+claude mcp add --transport stdio --scope user backstory -- '/Applications/Backstory.app/Contents/MacOS/BackstoryMCP'
 ```
 
-**Codex** — add this section to `~/.codex/config.toml`, then start a new task:
-
-```toml
-[mcp_servers."local-meeting-recorder"]
-command = "/Applications/Backstory.app/Contents/MacOS/LocalMeetingRecorderMCP"
-```
-
-The app also provides this Codex setup command when copying a meeting handoff:
+**Codex** — run in Terminal, then start a new agent session:
 
 ```sh
-codex mcp add local-meeting-recorder -- "/Applications/Backstory.app/Contents/MacOS/LocalMeetingRecorderMCP"
+codex mcp add backstory -- '/Applications/Backstory.app/Contents/MacOS/BackstoryMCP'
 ```
 
-Use the path shown by your copy of Backstory if it is installed elsewhere. If you already have a connection, replace only its helper `command` path and preserve other settings, including `args` and `env`.
+Use the path shown by your copy of Backstory if it is installed elsewhere. If **Old version connected** appears, use **Update**. The saved-configuration check does not prove a live agent session is connected.
 
 Try asking your agent:
 
@@ -233,32 +214,35 @@ Installation is blocked while recording, processing a meeting, importing, or exp
 
 Backstory records, transcribes, recognizes screen text, and generates local summaries on your Mac. It contains no telemetry, analytics SDK, or crash reporter.
 
-During normal app use, outbound requests from Backstory are GET requests for `update.json` and, when you choose to install, the update archive from GitHub Releases and GitHub's download hosts. They do not include meeting content, cookies, credentials, or device identifiers. You can disable automatic update checks in Settings.
+During normal app use, Backstory checks for updates and downloads an update when you choose to install it. Automatic checks can be disabled in Settings. When you choose **Install transcription** or install **Second opinion**, the bundled installer downloads pinned Python, packages, and models from GitHub, PyPI, and Hugging Face. These requests do not include meeting content.
 
-Meeting text is sent to the installed **Codex CLI** only when you explicitly choose **Improve text** and confirm. Video and audio are not passed to it. Separately, connected agents receive the meeting content they request through local MCP; their handling of that content follows their own configuration. Runtime and model installers download dependencies during setup; local summaries use the Ollama service on your Mac.
+Meeting text is sent to the installed **Codex CLI** only when you explicitly choose **Improve text** and confirm. Video and audio are not passed to it. Separately, connected agents receive the meeting content they request through local MCP; their handling of that content follows their own configuration. Local summaries use the Ollama service on your Mac.
 
-New libraries use:
+The meeting library is:
 
 ```text
 ~/Movies/Backstory/
 ```
 
-If `~/Movies/Local Meeting Recorder/` already exists as a directory, Backstory continues using it, including for new recordings. **Settings → Agent Access → Meeting Library** shows the actual path. Each meeting has its own folder containing media and associated text and metadata.
+Each meeting has its own folder containing media and associated text and metadata. **Settings → Agent access → Meeting library** shows the library path.
 
 ## Requirements
 
 - macOS **26 or later**.
-- An **Apple Silicon Mac** for the local transcription setup described above.
+- An **Apple Silicon Mac**.
 - Screen & System Audio Recording and Microphone permissions for recording.
-- Free disk space for recordings, plus runtimes and model downloads if you want transcription.
-- Python 3.11+, Git, and Swift build tools for transcription installation; CMake for optional Canary installation.
+- Free disk space for recordings and about **13 GB** for transcription setup; about **3.5 GB** free when installing Second opinion.
 - Ollama and the model named above for local summaries; an installed Codex CLI signed in with ChatGPT for optional text correction.
 
 ## FAQ and troubleshooting
 
 **I recorded a meeting, but there is no text.**
 
-Check Settings → Transcription. Both Speech and Speakers must be installed. Run the bundled installer, choose **Check Again**, then use **Retry Transcription** or **Transcribe** in the meeting. Recording does not depend on transcription being installed.
+Open **Settings → Transcription** and choose **Install transcription**. Speech recognition and Speaker separation must both be installed. Meetings that failed only because transcription was missing resume processing after installation; other recordings can be transcribed from the meeting. Recording does not depend on transcription being installed.
+
+**Transcription installation is taking a long time or progress is not moving.**
+
+Some steps show **Still working** before **No progress for 15 minutes**. Use **Show log** for details. You can choose **Cancel** and then **Try Again**; incomplete downloads resume.
 
 **Backstory says screen recording or microphone access is missing.**
 
@@ -266,11 +250,11 @@ Enable the corresponding permission in System Settings → Privacy & Security. A
 
 **Some speakers have no name, or a name has a question mark.**
 
-Open **Who's who**, listen to a sample, and confirm the person. A screen-derived suggestion is not a confirmed identity.
+Open **Who's who**, listen to a sample, and confirm the person. Backstory marks a name confirmed from consistent video evidence **by video**; you can undo it with **Not this person**. Other screen-derived suggestions still need your confirmation.
 
-**My agent cannot see meetings, or Agent Access says “Old version connected.”**
+**My agent cannot see meetings, or Agent access says “Old version connected.”**
 
-Check the helper and Meeting Library paths in Settings → Agent Access. Use the provided setup or repair text, preserve other configuration keys, and start a new agent session or task. The saved-configuration check is not proof of a live connection.
+Open **Settings → Agent access**. Choose **Connect**, or **Update** for **Old version connected**, then start a new agent session. If the CLI is missing, install it and choose **Check again**. The saved-configuration check is not proof of a live connection.
 
 **An update will not install during a call or meeting processing.**
 
